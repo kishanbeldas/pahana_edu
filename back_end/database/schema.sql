@@ -1,0 +1,68 @@
+-- Create Database
+DROP DATABASE IF EXISTS pahana_edu_billing;
+CREATE DATABASE pahana_edu_billing;
+USE pahana_edu_billing;
+
+-- Users table
+CREATE TABLE users (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('ADMIN', 'USER') DEFAULT 'USER',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Customers table
+CREATE TABLE customers (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    account_number VARCHAR(20) UNIQUE NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    address TEXT NOT NULL,
+    telephone VARCHAR(20) NOT NULL,
+    email VARCHAR(100),
+    units_consumed DECIMAL(10,2) DEFAULT 0.00,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Items table
+CREATE TABLE items (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    item_code VARCHAR(20) UNIQUE NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    unit_price DECIMAL(10,2) NOT NULL,
+    category VARCHAR(50),
+    stock_quantity INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Bills table
+CREATE TABLE bills (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    bill_number VARCHAR(20) UNIQUE NOT NULL,
+    customer_id BIGINT NOT NULL,
+    bill_date DATE NOT NULL,
+    due_date DATE NOT NULL,
+    subtotal DECIMAL(12,2) NOT NULL,
+    tax_amount DECIMAL(12,2) DEFAULT 0.00,
+    total_amount DECIMAL(12,2) NOT NULL,
+    status ENUM('PENDING', 'PAID', 'OVERDUE') DEFAULT 'PENDING',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+);
+
+-- Bill Items table
+CREATE TABLE bill_items (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    bill_id BIGINT NOT NULL,
+    item_id BIGINT NOT NULL,
+    quantity DECIMAL(10,2) NOT NULL,
+    unit_price DECIMAL(10,2) NOT NULL,
+    total_price DECIMAL(12,2) NOT NULL,
+    FOREIGN KEY (bill_id) REFERENCES bills(id) ON DELETE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
+);

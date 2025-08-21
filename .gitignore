@@ -1,0 +1,22 @@
+# Frontend (JavaScript) - in front_end folder
+front_end/node_modules/
+front_end/build/
+front_end/dist/
+front_end/.env
+front_end/package-lock.json
+
+# Backend (Java) - in back_end folder
+back_end/target/
+back_end/build/
+back_end/.gradle/
+back_end/out/
+back_end/*.jar
+back_end/*.war
+back_end/.idea/
+back_end/.vscode/
+back_end/*.iml
+
+# General files (applies to whole project)
+.DS_Store
+*.log
+.env
